@@ -51,10 +51,12 @@ class Combine(object):
             for lin in coor:
                 line_split = lin.split('\t')
                 if strand:
-                    mapto.setdefault(line_split[0] + line_split[1] + line_split[2] + line_split[5].strip('\n'),
+                    # integrate key collision fix from egaffo:
+                    # https://github.com/egaffo/circompara2/commit/739bd189b49ab0b00426deea398d6ca6ee8d77e5
+                    mapto.setdefault(line_split[0] + '@' +line_split[1] + '@' + line_split[2] + '@' + line_split[5].strip('\n'),
                                      []).append(lin.strip('\n'))
                 else:
-                    mapto.setdefault(line_split[0] + line_split[1] + line_split[2], []).append(lin.strip('\n'))
+                    mapto.setdefault(line_split[0] + '@' + line_split[1] + '@' + line_split[2], []).append(lin.strip('\n'))
 
         for fname in filelist:
             run_mapto = deepcopy(mapto)
@@ -62,9 +64,9 @@ class Combine(object):
                 for lin in f:
                     line_split = lin.split('\t')
                     if strand:
-                        cor = line_split[0] + line_split[1] + line_split[2] + line_split[5].strip('\n')
+                        cor = line_split[0] + '@' + line_split[1] + '@' + line_split[2] + '@' + line_split[5].strip('\n')
                     else:
-                        cor = line_split[0] + line_split[1] + line_split[2]
+                        cor = line_split[0] + '@' + line_split[1] + '@' + line_split[2]
                     run_mapto[cor].append(line_split[col - 1])
             with open(fname + 'mapped', 'w') as fout:
                 for key in run_mapto:
