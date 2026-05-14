@@ -107,9 +107,14 @@ class Circfilter(object):
                     keep_index.append(i)
             indx0 = indx0[keep_index]
             count0 = count0[keep_index]
-        nonrep = np.column_stack((indx0, count0))
-        # write the result
-        np.savetxt(self.tmp_dir + 'tmp_unsortedWithChrM', nonrep, delimiter='\t', newline='\n', fmt='%s')
+        ### start of changes -- from Matt Johnson
+        # https://stackoverflow.com/questions/54361557/appending-to-file-using-savetxt
+        print('Using new memory-conserving edit') 
+        with open(self.tmp_dir + 'tmp_unsortedWithChrM', "ab") as outfile:
+            for row in range(len(indx0)):
+                tmp = np.concatenate((indx0[row], count0[row]))
+                np.savetxt(outfile, tmp[np.newaxis], delimiter='\t', newline='\n', fmt='%s')
+        ### end of changes
 
     def dummy_filter(self, indx0, count0):
         nonrep = np.column_stack((indx0, count0))
