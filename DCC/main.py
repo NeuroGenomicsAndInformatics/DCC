@@ -339,6 +339,8 @@ def main(circtools_parser=None):
             try:
                 file2filter = options.filteronly[0]
                 coorfile = options.filteronly[1]
+                # add annoation_tree def, so -fg can be used even if dectect step is not run
+                annotation_tree = circann.selectGeneGtf(options.annotate)
                 logging.info("Using files %s and %s for filtering" % (options.filteronly[0], options.filteronly[1]))
                 print("Using files %s and %s for filtering" % (options.filteronly[0], options.filteronly[1]))
 
